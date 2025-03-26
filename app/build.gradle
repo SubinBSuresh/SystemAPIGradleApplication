@@ -1,0 +1,74 @@
+plugins {
+    alias(libs.plugins.android.application)
+}
+
+android {
+    namespace 'com.dutch.gradlesystemapiapplication'
+    compileSdk 35
+
+    sourceSets {
+        main {
+            // Soong will use these
+            java.srcDirs = ['src/main/java']
+
+            // Android Studio will use main + stub
+            if (System.getenv("ANDROID_BUILD_TOP") == null) {
+                java.srcDirs += 'src/stub/java'
+            }
+        }
+    }
+
+    defaultConfig {
+        applicationId "com.dutch.gradlesystemapiapplication"
+        minSdk 29
+        targetSdk 35
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+//    packagingOptions {
+//        exclude 'android/app/ActivityManager.class'
+//        pickFirst '**/libc++_shared.so'
+//        exclude 'META-INF/*.version'
+//    }
+}
+
+dependencies {
+    // System API stubs - must be first
+//    compileOnly files('libs/android-stub.jar')
+//    compileOnly files('libs/sample-stub.jar')
+
+    // Standard dependencies
+    implementation libs.appcompat
+    implementation libs.material
+    implementation libs.activity
+    implementation libs.constraintlayout
+
+    // Test dependencies
+    testImplementation libs.junit
+    androidTestImplementation libs.ext.junit
+    androidTestImplementation libs.espresso.core
+}
+
+// This ensures our stubs are used during compilation
+//gradle.projectsEvaluated {
+//    tasks.withType(JavaCompile) {
+//        options.compilerArgs += [
+//                "-Xbootclasspath/p:${file('libs/android-stub.jar')}"
+//        ]
+//    }
+//}
